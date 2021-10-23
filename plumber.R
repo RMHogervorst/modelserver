@@ -20,10 +20,13 @@ function(label=NULL, group=NULL){
 #* @param message you want to send a message
 #* @param extra can be empty
 #* @post /events
-function(id, message, extra=NULL){
-    fail_on_missing_id(id)
-    send_event(con, id, message, extra)
-    list("response saved")
+function(res,id, message, extra=NULL){
+    result <- 
+        handle_foreignkey_error(
+        send_event(con, id, message, extra),
+        res)
+    res <- result$res
+    list(result$msg)
 }
 
 #* Metadata endpoint
@@ -37,10 +40,13 @@ function(id, message, extra=NULL){
 #* @param value
 #* @param extra 
 #* @post /metadata
-function(id, key, value, extra=NULL){
-    fail_on_missing_id(id)
-    send_metadata(con, id, key, value, extra)
-    list("response saved")
+function(res,id, key, value, extra=NULL){
+    result <- 
+        handle_foreignkey_error(
+            send_metadata(con, id, key, value, extra),
+            res)
+    res <- result$res
+    list(result$msg)
 }
 
 
@@ -51,10 +57,13 @@ function(id, key, value, extra=NULL){
 #* For instance: "RMSE", 0.87
 #* @param 
 #* @post /metrics
-function(id, metric, value, extra=NULL){
-    fail_on_missing_id(id)
-    send_metric(con, id, metric, value, extra)
-    list("metric saved")
+function(res,id, metric, value, extra=NULL){
+    result <- 
+        handle_foreignkey_error(
+            send_metric(con, id, metric, value, extra),
+            res)
+    res <- result$res
+    list(result$msg)
 }
 
 #* Parameter endpoint
@@ -65,8 +74,20 @@ function(id, metric, value, extra=NULL){
 #* @param id
 #* @param parameter
 #* @post /parameters
-function(id, parameter, numeric = NULL, text=NULL, extra=NULL){
-    fail_on_missing_id(id)
-    send_parameters(con, id, parameter, numeric, text, extra)
-    list("parameter saved")
+function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
+    result <- 
+        handle_foreignkey_error(
+            send_parameters(con, id, parameter, numeric, text, extra),
+            res)
+    res <- result$res
+    list(result$msg)
+}
+
+
+#' Get status
+#' 
+#' Returns the number of rows in database.
+#' @get /status
+function(){
+    list(show_table_sizes(con))
 }

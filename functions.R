@@ -155,3 +155,35 @@ show_table_sizes <- function(con){
   "
     DBI::dbGetQuery(con, query)
 }
+
+
+catch_foreignkeyerror <- function(fun){
+    tryCatch(fun,error=function(e){
+        if(grepl("FOREIGN KEY constraint failed",e)){
+            list(FALSE,e)
+        }else{
+            list(TRUE, e)
+        }
+    })
+}
+
+#' If the result is a foreign key error 
+#' return a 403, otherwise something is wrong
+#' on my side so it becomes a 500 
+handle_foreignkey_error <- function(fun, res){
+    res$status <- 200
+    msg <- "response saved"
+    result <- catch_foreignkeyerror(fun)
+    if(length(result)>1){
+      # there was an error
+      if(!result[[1]]){
+        res$status <- 403
+        msg <- "invalid ID. You need a valid ID for every request, get it from /new_run"
+      }else{
+        res$status <- 500
+        msg <- "something went wrong on this side"
+        print(paste0("error: ",result[[2]]))
+      }# I'm dropping the error here, if we want to display it, we have to do something with it.
+    }
+    list(res=res, msg=msg)
+}
