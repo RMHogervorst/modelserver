@@ -7,6 +7,7 @@ The idea is you send a request when you start a run and when you end a run and i
 The server handles these things and puts them into a database. 
 (this is inspired by the MLflow python package that does this and more) I think this is most like MLFlow - Tracking.
 
+You can find this project on [gitlab](https://gitlab.com/rmhogervorst/modelserver) and [github](https://github.com/RMHogervorst/modelserver).
 
 ## How to run
 Right now, clone this repo somewhere.
