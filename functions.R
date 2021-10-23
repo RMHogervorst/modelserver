@@ -133,7 +133,7 @@ send_metadata <- function(con,id, key, value, extra=NULL){
 }
 
 nuke_database <- function(con){
-    message("Deleting tables metrics, events, and tokens from db!")
+    message("Deleting tables metrics, events, parameters, metadata and tokens from db!")
     DBI::dbExecute(con, "drop table if exists metrics;")
     DBI::dbExecute(con, "drop table if exists events;")
     DBI::dbExecute(con, "drop table if exists parameters;")

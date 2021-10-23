@@ -1,9 +1,13 @@
 con <- get_database_connection()
 setup_database(con)
 
+#* @apiTitle modelserver
+#* @apiDescription This is an API server that you can use to send your model data to. Start by requesting an id via /new_run, you will need it for all other API endpoints, log your runs with events like start stop etc. to /events (using the id). Send metadat to /metadata, model parameters to /parameters and metrics to /metrics.
+#* @apiVersion v1
+
 #* Register new run.
 #*
-#* This will return a token that you need for further requests.
+#* This will return a token (id) that you need for further requests.
 #* @param label Modelserver will remember this label
 #* @param group optional argument if you want to group runs
 #* @get /new_run
@@ -36,9 +40,9 @@ function(res,id, message, extra=NULL){
 #* For instance: "title" , "a nice title" or "author", "simply red" 
 #* or "model", "XGBoost"
 #* @param id required argument
-#* @param key 
-#* @param value
-#* @param extra 
+#* @param key text field
+#* @param value text field
+#* @param extra optional extra field
 #* @post /metadata
 function(res,id, key, value, extra=NULL){
     result <- 
@@ -55,7 +59,10 @@ function(res,id, key, value, extra=NULL){
 #* Send metrics about your run to the backend.
 #* use key value
 #* For instance: "RMSE", 0.87
-#* @param 
+#* @param id required argument
+#* @param metric Name of the metric
+#* @param value:dbl numeric value for metric
+#* @param extra optional extra field
 #* @post /metrics
 function(res,id, metric, value, extra=NULL){
     result <- 
@@ -71,8 +78,11 @@ function(res,id, metric, value, extra=NULL){
 #* Send parameters to the backend.
 #* These can be numeric or textual 
 #* For instance "n_trees", 4, NULL or "mode", NULL, "regression"
-#* @param id
-#* @param parameter
+#* @param id required argument
+#* @param parameter name of the parameter
+#* @param numeric:dbl optional numeric value for parameter
+#* @param text optional text value for parameter
+#* @param extra optional extra field
 #* @post /parameters
 function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
     result <- 
@@ -91,3 +101,4 @@ function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
 function(){
     list(show_table_sizes(con))
 }
+
