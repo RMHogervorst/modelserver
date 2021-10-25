@@ -13,6 +13,7 @@ setup_database(con)
 #* @get /new_run
 function(label=NULL, group=NULL){
     res <- register_new_token(con, label, group)
+    log_degug('new request logged')
     list(id = res)
 }
 
@@ -29,6 +30,7 @@ function(res,id, message, extra=NULL){
         handle_foreignkey_error(
         send_event(con, id, message, extra),
         res)
+    log_debug("event posted")
     res <- result$res
     list(result$msg)
 }
@@ -49,6 +51,7 @@ function(res,id, key, value, extra=NULL){
         handle_foreignkey_error(
             send_metadata(con, id, key, value, extra),
             res)
+    log_debug("metadata posted")
     res <- result$res
     list(result$msg)
 }
@@ -69,6 +72,7 @@ function(res,id, metric, value, extra=NULL){
         handle_foreignkey_error(
             send_metric(con, id, metric, value, extra),
             res)
+    log_debug("metric posted")
     res <- result$res
     list(result$msg)
 }
@@ -89,6 +93,8 @@ function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
         handle_foreignkey_error(
             send_parameters(con, id, parameter, numeric, text, extra),
             res)
+    
+    log_debug("parameter posted")
     res <- result$res
     list(result$msg)
 }
@@ -99,6 +105,7 @@ function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
 #' Returns the number of rows in database.
 #' @get /status
 function(){
+    log_debug("status requested")
     list(show_table_sizes(con))
 }
 
