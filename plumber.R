@@ -8,10 +8,10 @@ setup_database(con)
 #* Register new run.
 #*
 #* This will return a token (id) that you need for further requests.
-#* @param label Modelserver will remember this label
-#* @param group optional argument if you want to group runs
+#* @param label [optional] Modelserver will remember this label
+#* @param group [optional] argument if you want to group runs
 #* @get /new_run
-function(label=NULL, group=NULL){
+function(label=NA, group=NA){
     res <- register_new_token(con, label, group)
     log_debug('new request logged')
     list(id = res)
@@ -25,7 +25,7 @@ function(label=NULL, group=NULL){
 #* @param message you want to send a message
 #* @param extra can be empty
 #* @post /events
-function(res,id, message, extra=NULL){
+function(res,id, message, extra=NA){
     result <- 
         handle_foreignkey_error(
         send_event(con, id, message, extra),
@@ -46,7 +46,7 @@ function(res,id, message, extra=NULL){
 #* @param value text field
 #* @param extra optional extra field
 #* @post /metadata
-function(res,id, key, value, extra=NULL){
+function(res,id, key, value, extra=NA){
     result <- 
         handle_foreignkey_error(
             send_metadata(con, id, key, value, extra),
@@ -67,7 +67,7 @@ function(res,id, key, value, extra=NULL){
 #* @param value:dbl numeric value for metric
 #* @param extra optional extra field
 #* @post /metrics
-function(res,id, metric, value, extra=NULL){
+function(res,id, metric, value, extra=NA){
     result <- 
         handle_foreignkey_error(
             send_metric(con, id, metric, value, extra),
@@ -88,7 +88,7 @@ function(res,id, metric, value, extra=NULL){
 #* @param text optional text value for parameter
 #* @param extra optional extra field
 #* @post /parameters
-function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
+function(res,id, parameter, numeric = NA, text=NA, extra=NA){
     result <- 
         handle_foreignkey_error(
             send_parameters(con, id, parameter, numeric, text, extra),
