@@ -157,6 +157,23 @@ show_table_sizes <- function(con){
 }
 
 
+show_run_summary <- function(con, id){
+  query = glue::glue("
+  select count(*) as rows, 'metrics' as tablename from metrics
+  WHERE id = {id}
+  union
+  select count(*) as rows, 'parameters' as tablename from parameters
+  WHERE id = {id}
+  union 
+  select count(*) as rows, 'metadata' as tablename from metadata
+  WHERE id = {id}
+  union
+  select count(*) as rows, 'events' as tablename from events
+  WHERE id = {id}
+  ")
+  DBI::dbGetQuery(con, query)
+}
+
 catch_foreignkeyerror <- function(fun){
     tryCatch(fun,error=function(e){
         if(grepl("FOREIGN KEY constraint failed",e)){

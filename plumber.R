@@ -13,7 +13,7 @@ setup_database(con)
 #* @get /new_run
 function(label=NULL, group=NULL){
     res <- register_new_token(con, label, group)
-    log_degug('new request logged')
+    log_debug('new request logged')
     list(id = res)
 }
 
@@ -100,12 +100,21 @@ function(res,id, parameter, numeric = NULL, text=NULL, extra=NULL){
 }
 
 
-#' Get status
-#' 
-#' Returns the number of rows in database.
-#' @get /status
+#* Get status
+#* 
+#* Returns the number of rows in database.
+#* @get /status
 function(){
     log_debug("status requested")
     list(show_table_sizes(con))
 }
 
+#* Get all stats for one run
+#* 
+#* Get all stats
+#* @param id of the thing you want to request.
+#* @get /run_summary
+function(id){
+    log_debug("run summary request")
+    list(show_run_summary(con, id))
+} 
